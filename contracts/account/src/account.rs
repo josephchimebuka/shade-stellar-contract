@@ -16,7 +16,7 @@ impl MerchantAccountTrait for MerchantAccount {
         let account_info = AccountInfo {
             merchant: merchant.clone(),
             manager: manager.clone(),
-            merchant_id: merchant_id,
+            merchant_id,
             date_created: env.ledger().timestamp(),
         };
         env.storage()
