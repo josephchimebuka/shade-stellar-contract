@@ -1,6 +1,7 @@
 use crate::components::{
-    admin as admin_component, core as core_component, invoice as invoice_component,
-    merchant as merchant_component, pausable as pausable_component, upgrade as upgrade_component,
+    access_control as access_control_component, admin as admin_component, core as core_component,
+    invoice as invoice_component, merchant as merchant_component, pausable as pausable_component,
+    upgrade as upgrade_component,
 };
 use crate::errors::ContractError;
 use crate::events;
