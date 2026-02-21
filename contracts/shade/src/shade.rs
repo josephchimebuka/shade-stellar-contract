@@ -3,7 +3,7 @@ use crate::errors::ContractError;
 use crate::events;
 use crate::interface::ShadeTrait;
 use crate::types::{ContractInfo, DataKey};
-use soroban_sdk::{contract, contractimpl, panic_with_error, Address, Env};
+use soroban_sdk::{contract, contractimpl, panic_with_error, Address, BytesN, Env};
 
 #[contract]
 pub struct Shade;
@@ -26,6 +26,13 @@ impl ShadeTrait for Shade {
     }
     fn get_admin(env: Env) -> Address {
         core_component::get_admin(&env)
+    }
+
+    fn upgrade(env: Env, admin: Address, new_wasm_hash: BytesN<32>) {
+        core_component::assert_admin(&env, &admin);
+        env.deployer()
+            .update_current_contract_wasm(new_wasm_hash.clone());
+        events::publish_contract_upgraded_event(&env, new_wasm_hash, env.ledger().timestamp());
     }
 
     fn add_accepted_token(env: Env, admin: Address, token: Address) {
