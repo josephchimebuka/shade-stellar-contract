@@ -1,6 +1,7 @@
 use crate::components::{
     access_control as access_control_component, admin as admin_component, core as core_component,
     invoice as invoice_component, merchant as merchant_component, pausable as pausable_component,
+    upgrade as upgrade_component,
 };
 use crate::errors::ContractError;
 use crate::events;
@@ -29,13 +30,6 @@ impl ShadeTrait for Shade {
     }
     fn get_admin(env: Env) -> Address {
         core_component::get_admin(&env)
-    }
-
-    fn upgrade(env: Env, admin: Address, new_wasm_hash: BytesN<32>) {
-        core_component::assert_admin(&env, &admin);
-        env.deployer()
-            .update_current_contract_wasm(new_wasm_hash.clone());
-        events::publish_contract_upgraded_event(&env, new_wasm_hash, env.ledger().timestamp());
     }
 
     fn add_accepted_token(env: Env, admin: Address, token: Address) {
@@ -126,5 +120,9 @@ impl ShadeTrait for Shade {
 
     fn is_paused(env: Env) -> bool {
         pausable_component::is_paused(&env)
+    }
+
+    fn upgrade(env: Env, new_wasm_hash: BytesN<32>) {
+        upgrade_component::upgrade(&env, &new_wasm_hash);
     }
 }

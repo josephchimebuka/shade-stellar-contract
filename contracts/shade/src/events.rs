@@ -31,20 +31,6 @@ pub fn publish_token_removed_event(env: &Env, token: Address, timestamp: u64) {
 }
 
 #[contractevent]
-pub struct ContractUpgradedEvent {
-    pub new_wasm_hash: BytesN<32>,
-    pub timestamp: u64,
-}
-
-pub fn publish_contract_upgraded_event(env: &Env, new_wasm_hash: BytesN<32>, timestamp: u64) {
-    ContractUpgradedEvent {
-        new_wasm_hash,
-        timestamp,
-    }
-    .publish(env);
-}
-
-#[contractevent]
 pub struct MerchantRegisteredEvent {
     pub merchant: Address,
     pub merchant_id: u64,
@@ -108,12 +94,19 @@ pub fn publish_merchant_verified_event(env: &Env, merchant_id: u64, status: bool
 #[contractevent]
 pub struct MerchantKeySetEvent {
     pub merchant: Address,
+    pub key: BytesN<32>,
     pub timestamp: u64,
 }
 
-pub fn publish_merchant_key_set_event(env: &Env, merchant: Address, timestamp: u64) {
+pub fn publish_merchant_key_set_event(
+    env: &Env,
+    merchant: Address,
+    key: BytesN<32>,
+    timestamp: u64,
+) {
     MerchantKeySetEvent {
         merchant,
+        key,
         timestamp,
     }
     .publish(env);
@@ -181,3 +174,16 @@ pub fn publish_contract_unpaused_event(env: &Env, admin: Address, timestamp: u64
     ContractUnpausedEvent { admin, timestamp }.publish(env);
 }
 
+#[contractevent]
+pub struct ContractUpgradedEvent {
+    pub new_wasm_hash: BytesN<32>,
+    pub timestamp: u64,
+}
+
+pub fn publish_contract_upgraded_event(env: &Env, new_wasm_hash: BytesN<32>, timestamp: u64) {
+    ContractUpgradedEvent {
+        new_wasm_hash,
+        timestamp,
+    }
+    .publish(env);
+}
